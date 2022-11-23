@@ -1,9 +1,12 @@
-//import寫好的HeaderComponent,TasksComponent
-import HeaderComponent from "./components/Header";
-import TasksComponent from "./components/Tasks";
 //要使用useState這個hook,要從react import,
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+//import寫好的HeaderComponent,TasksComponent
+import HeaderComponent from "./components/Header";
+import FooterComponent from "./components/Footer";
+import TasksComponent from "./components/Tasks";
 import AddTask from "./components/AddTask";
+import AboutComponent from "./components/About";
 
 //在root element中呼叫該HeaderComponent,TasksComponent
 function AppRootComponent() {
@@ -118,22 +121,38 @@ function AppRootComponent() {
 
   //由於tasks陣列(state)變成global state,因此要把陣列作為變數,傳到TasksComponent中,做處理
   return (
-    <div className="container">
-      <HeaderComponent
-        onAdd={() => setShowAddTask(!showAddTask)}
-        showAdd={showAddTask}
-      />
-      {showAddTask && <AddTask onAdd={addTask} />}
-      {tasksArray.length > 0 ? (
-        <TasksComponent
-          tasksArray={tasksArray}
-          onDelete={deleteTask}
-          onToggle={toggleRemider}
+    //這整個回傳的JSX被Router包住  代表這裡面的component會做路由
+    //Routes 則會包住 要路由的Component
+    //Route 則寫入路徑名稱  例如 "/" 或是"/about" 後面的element則是要顯示出的元素(component)
+    <Router>
+      <div className="container">
+        <HeaderComponent
+          onAdd={() => setShowAddTask(!showAddTask)}
+          showAdd={showAddTask}
         />
-      ) : (
-        "No Tasks To Show"
-      )}
-    </div>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                {showAddTask && <AddTask onAdd={addTask} />}
+                {tasksArray.length > 0 ? (
+                  <TasksComponent
+                    tasksArray={tasksArray}
+                    onDelete={deleteTask}
+                    onToggle={toggleRemider}
+                  />
+                ) : (
+                  "No Tasks To Show"
+                )}
+              </>
+            }
+          />
+          <Route path="/about" element={<AboutComponent />} />
+        </Routes>
+        <FooterComponent />
+      </div>
+    </Router>
   );
 }
 
