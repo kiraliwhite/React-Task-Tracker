@@ -1,19 +1,25 @@
 //簡寫是impt
 import PropTypes from "prop-types";
 import ButtonComponent from "./Button";
+import { useLocation } from "react-router-dom";
 
 //用呼叫Button箭頭函式的方式,且帶入變數color,與text,傳給Button.js
 const HeaderComponent = ({ title, onAdd, showAdd }) => {
+  //抓取useLocation,存為變數檢查現在Router的路徑,如果為"/", 才會顯示按鈕
+  const location = useLocation();
+
   //當Button按下時,觸發上方onClick function,列出Click,且onClick這個變數,傳送給Button.js的Component
   //一般的button是小寫,這裡的component使用大寫的Button來做區分
   return (
     <header className="header">
       <h1>{title}</h1>
-      <ButtonComponent
-        color={showAdd ? "red" : "green"}
-        text={showAdd ? "Close" : "Add"}
-        onClick={onAdd}
-      />
+      {location.pathname === "/" && (
+        <ButtonComponent
+          color={showAdd ? "red" : "green"}
+          text={showAdd ? "Close" : "Add"}
+          onClick={onAdd}
+        />
+      )}
     </header>
   );
 };
